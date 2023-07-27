@@ -4,40 +4,22 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private BoxCollider2D boxCollider;
-    private Vector3 moveDelta;
-    public Animator animator;
 
     public float moveSpeed = 5f;
+    public Rigidbody2D rb;
+    public Animator animator;
+    Vector2 movement;
 
-    // Start is called before the first frame update
-    void Start()
+    void Update()
     {
-        boxCollider = GetComponent<BoxCollider2D>();
-        animator = GetComponent<Animator>();
+        movement.x = Input.GetAxisRaw("Horizontal");
+        movement.y = Input.GetAxisRaw("Vertical");
+        animator.SetFloat("Horizontal", movement.x);
+        animator.SetFloat("Vertical", movement.y);
+        animator.SetFloat("Speed", movement.sqrMagnitude);
     }
-
-    // Update is called once per frame
     void FixedUpdate()
     {
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
-
-        animator.SetFloat("Horizontal", x);
-        animator.SetFloat("Vertical", y);
-        animator.SetFloat("Speed", moveDelta.sqrMagnitude);
-
-        moveDelta = new Vector3(x, y, 0);
-
-        if (moveDelta.x > 0)
-        {
-            transform.localScale = Vector3.one;
-        }
-        else if (moveDelta.x < 0)
-        { 
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
-
-        transform.Translate(moveDelta * Time.deltaTime * moveSpeed);
+        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 }
