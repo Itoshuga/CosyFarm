@@ -6,19 +6,26 @@ public class PlayerMovement : MonoBehaviour
 {
     private BoxCollider2D boxCollider;
     private Vector3 moveDelta;
+    public Animator animator;
+
     public float moveSpeed = 5f;
 
     // Start is called before the first frame update
     void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
+
+        animator.SetFloat("Horizontal", x);
+        animator.SetFloat("Vertical", y);
+        animator.SetFloat("Speed", moveDelta.sqrMagnitude);
 
         moveDelta = new Vector3(x, y, 0);
 
