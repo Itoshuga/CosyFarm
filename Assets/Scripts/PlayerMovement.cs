@@ -4,22 +4,40 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private Rigidbody2D rB;
+    private Animator animator;
+    private Vector2 movementPosition;
 
     public float moveSpeed = 5f;
-    public Rigidbody2D rb;
-    public Animator animator;
-    Vector2 movement;
+
+    void Start() {
+        rB = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+    }
 
     void Update()
     {
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
-        animator.SetFloat("Horizontal", movement.x);
-        animator.SetFloat("Vertical", movement.y);
-        animator.SetFloat("Speed", movement.sqrMagnitude);
+        movementPosition = Vector2.zero;
+        movementPosition.x = Input.GetAxisRaw("Horizontal");
+        movementPosition.y = Input.GetAxisRaw("Vertical");
+        
+       UpdateAnimation();
     }
-    void FixedUpdate()
+
+    void UpdateAnimation() {
+        if (movementPosition != Vector2.zero) {
+            UpdateMovement();
+
+            animator.SetFloat("Horizontal", movementPosition.x);
+            animator.SetFloat("Vertical", movementPosition.y);
+            animator.SetBool("isWalking", true);
+        } else {
+            animator.SetBool("isWalking", false);
+        }
+    }
+
+    void UpdateMovement()
     {
-        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        rB.MovePosition(rB.position + movementPosition.normalized * moveSpeed * Time.fixedDeltaTime);
     }
 }
