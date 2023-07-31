@@ -9,6 +9,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 movementPosition;
 
     public float moveSpeed = 5f;
+    public float sprintMultiplier = 1.3f;
+    private bool isSprinting = false;
 
     void Start() {
         rB = GetComponent<Rigidbody2D>();
@@ -20,8 +22,10 @@ public class PlayerMovement : MonoBehaviour
         movementPosition = Vector2.zero;
         movementPosition.x = Input.GetAxisRaw("Horizontal");
         movementPosition.y = Input.GetAxisRaw("Vertical");
-        
-       UpdateAnimation();
+
+        isSprinting = Input.GetKey(KeyCode.LeftShift);
+
+        UpdateAnimation();
     }
 
     void UpdateAnimation() {
@@ -38,6 +42,13 @@ public class PlayerMovement : MonoBehaviour
 
     void UpdateMovement()
     {
-        rB.MovePosition(rB.position + movementPosition.normalized * moveSpeed * Time.fixedDeltaTime);
+        float currentMoveSpeed = moveSpeed;
+
+        if (isSprinting)
+        {
+            currentMoveSpeed *= sprintMultiplier; 
+        }
+
+        rB.MovePosition(rB.position + movementPosition.normalized * currentMoveSpeed * Time.fixedDeltaTime);
     }
 }
