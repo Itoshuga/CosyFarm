@@ -12,8 +12,6 @@ public class CollectableObject : MonoBehaviour
     Vector3 targetPosition;
     private float speedAttraction = 2f;
 
-    public AudioClip collectSound;
-
     private void Awake()
     {
         rB = GetComponent<Rigidbody2D>();
@@ -26,7 +24,6 @@ public class CollectableObject : MonoBehaviour
         if (player)
         {
             player.inventory.Add(this);
-            PlayCollectSound();
             Destroy(this.gameObject);
         }
     }
@@ -44,14 +41,6 @@ public class CollectableObject : MonoBehaviour
     {
         targetPosition = position;
         hasTarget = true;
-    }
-
-    private void PlayCollectSound()
-    {
-        if (collectSound != null)
-        {
-            AudioSource.PlayClipAtPoint(collectSound, transform.position);
-        }
     }
 }
 
